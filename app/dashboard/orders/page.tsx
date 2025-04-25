@@ -1,8 +1,11 @@
+// app/dashboard/orders/page.tsx
 'use client';
 
-import { ChevronDown, Filter, Plus, Search } from 'lucide-react';
+import { ChevronDown, Download, Filter, Plus, Search, Upload } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import OrderExcelImporter from '../../../components/OrderExcelImporter';
+import { downloadOrderExcelTemplate } from '../../../utils/excelTemplateGenerator';
 
 interface Order {
 	id: string;
@@ -17,6 +20,16 @@ interface Order {
 	assignedTailor: string;
 }
 
+interface ImportedOrderData {
+	customerName: string;
+	customerPhone: string;
+	fabricType: string;
+	fabricColor: string;
+	deliveryDate?: string;
+	price: number;
+	notes?: string;
+}
+
 export default function OrdersPage() {
 	const [orders, setOrders] = useState<Order[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -24,6 +37,8 @@ export default function OrdersPage() {
 	const [statusFilter, setStatusFilter] = useState<string>('all');
 	const [dateFilter, setDateFilter] = useState<string>('all');
 	const [showFilterMenu, setShowFilterMenu] = useState(false);
+	const [showImportModal, setShowImportModal] = useState(false);
+	const [importSuccess, setImportSuccess] = useState<string | null>(null);
 
 	useEffect(() => {
 		const fetchOrders = async () => {
@@ -128,6 +143,45 @@ export default function OrdersPage() {
 		}
 	};
 
+	const handleImportOrders = async (importedOrders: ImportedOrderData[]) => {
+		try {
+			// In a real implementation, you would send these to your API
+			console.log('Importing orders:', importedOrders);
+
+			// Mock API call delay
+			await new Promise((resolve) => setTimeout(resolve, 2000));
+
+			// For demo purposes, we'll add these to our state with mock IDs
+			const newOrders: Order[] = importedOrders.map((order, index) => {
+				const id = `imp${String(Date.now()).slice(-5)}${index}`;
+				return {
+					id,
+					customer: {
+						id: `c_imp_${index}`,
+						name: order.customerName,
+					},
+					createdAt: new Date().toISOString().split('T')[0],
+					deliveryDate: order.deliveryDate || null,
+					status: 'pending',
+					price: order.price,
+					assignedTailor: 'لم يتم التعيين',
+				};
+			});
+
+			setOrders([...newOrders, ...orders]);
+			setShowImportModal(false);
+			setImportSuccess(`تم استيراد ${importedOrders.length} طلب بنجاح`);
+
+			// Clear success message after 5 seconds
+			setTimeout(() => {
+				setImportSuccess(null);
+			}, 5000);
+		} catch (error) {
+			console.error('Error importing orders:', error);
+			// Handle error
+		}
+	};
+
 	if (isLoading) {
 		return <div className='flex items-center justify-center h-96'>جاري التحميل...</div>;
 	}
@@ -136,14 +190,36 @@ export default function OrdersPage() {
 		<div className='space-y-6'>
 			<div className='flex justify-between items-center'>
 				<h1 className='text-2xl font-bold text-gray-800'>الطلبات</h1>
-				<Link
-					href='/dashboard/orders/new'
-					className='inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500'
-				>
-					<Plus className='ml-2 h-4 w-4' />
-					طلب جديد
-				</Link>
+				<div className='flex space-x-2 space-x-reverse'>
+					<button
+						onClick={() => downloadOrderExcelTemplate()}
+						className='inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500'
+					>
+						<Download className='ml-2 h-4 w-4' />
+						نموذج Excel
+					</button>
+					<button
+						onClick={() => setShowImportModal(true)}
+						className='inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500'
+					>
+						<Upload className='ml-2 h-4 w-4' />
+						استيراد
+					</button>
+					<Link
+						href='/dashboard/orders/new'
+						className='inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500'
+					>
+						<Plus className='ml-2 h-4 w-4' />
+						طلب جديد
+					</Link>
+				</div>
 			</div>
+
+			{importSuccess && (
+				<div className='bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md'>
+					{importSuccess}
+				</div>
+			)}
 
 			<div className='bg-white rounded-lg shadow-sm overflow-hidden'>
 				<div className='p-4 border-b border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
@@ -310,6 +386,11 @@ export default function OrdersPage() {
 					</div>
 				)}
 			</div>
+
+			{/* Import Excel Modal */}
+			{showImportModal && (
+				<OrderExcelImporter onImport={handleImportOrders} onClose={() => setShowImportModal(false)} />
+			)}
 		</div>
 	);
 }
