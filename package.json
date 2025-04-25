@@ -1,27 +1,44 @@
 {
-  "name": "thobe-master",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "next": "15.3.1"
-  },
-  "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
-    "eslint": "^9",
-    "eslint-config-next": "15.3.1",
-    "@eslint/eslintrc": "^3"
-  }
+	"name": "thobe-master",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"deploy": "next build && firebase deploy --only hosting"
+	},
+	"dependencies": {
+		"@hookform/resolvers": "^5.0.1",
+		"@next/third-parties": "^15.2.1",
+		"animejs": "^3.2.2",
+		"firebase": "^11.4.0",
+		"framer-motion": "^12.4.3",
+		"html-to-image": "^1.11.13",
+		"html2canvas": "^1.4.1",
+		"lucide-react": "^0.475.0",
+		"moyasar": "^0.5.1",
+		"nanoid": "^5.1.4",
+		"next": "15.1.7",
+		"react": "^19.0.0",
+		"react-dom": "^19.0.0",
+		"react-hook-form": "^7.56.1",
+		"react-hot-toast": "^2.5.2",
+		"react-icons": "^5.5.0",
+		"react-intersection-observer": "^9.16.0",
+		"react-router-dom": "^7.1.5",
+		"recharts": "^2.15.3",
+		"zod": "^3.24.3"
+	},
+	"devDependencies": {
+		"@eslint/eslintrc": "^3",
+		"@types/node": "^20.17.19",
+		"@types/react": "^19",
+		"@types/react-dom": "^19",
+		"eslint": "^9",
+		"eslint-config-next": "15.1.7",
+		"postcss": "^8",
+		"tailwindcss": "^3.4.1",
+		"typescript": "^5"
+	}
 }

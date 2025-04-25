@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "final-project-a53c5"
+  },
+  "targets": {
+    "final-project-a53c5": {
+      "hosting": {
+        "fasselly.net": [
+          "fasselly-landing-page"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

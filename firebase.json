@@ -1,0 +1,74 @@
+{
+	"hosting": {
+		"target": "fasselly-tailor-system.web.app",
+		"public": "out",
+		"ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+		"cleanUrls": false,
+		"trailingSlash": true,
+		"rewrites": [
+			{
+				"source": "/api/payment-callback",
+				"destination": "/api/payment-callback.html"
+			},
+			{
+				"source": "/.well-known/apple-developer-merchantid-domain-association",
+				"destination": "/.well-known/apple-developer-merchantid-domain-association"
+			},
+			{
+				"source": "**",
+				"destination": "/index.html"
+			}
+		],
+		"headers": [
+			{
+				"source": "**/*.@(jpg|jpeg|gif|png|svg|webp)",
+				"headers": [
+					{
+						"key": "Cache-Control",
+						"value": "public, max-age=86400"
+					}
+				]
+			},
+			{
+				"source": "**/*.@(js|css)",
+				"headers": [
+					{
+						"key": "Cache-Control",
+						"value": "public, max-age=3600"
+					}
+				]
+			},
+			{
+				"source": "**/*.html",
+				"headers": [
+					{
+						"key": "Cache-Control",
+						"value": "no-cache, no-store, must-revalidate"
+					}
+				]
+			},
+			{
+				"source": "**",
+				"headers": [
+					{
+						"key": "Cache-Control",
+						"value": "no-cache, no-store, must-revalidate"
+					}
+				]
+			},
+			{
+				"source": "/.well-known/apple-developer-merchantid-domain-association",
+				"headers": [
+					{
+						"key": "Content-Type",
+						"value": "application/octet-stream"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache, no-store, must-revalidate"
+					}
+				]
+			}
+		]
+	}
+}

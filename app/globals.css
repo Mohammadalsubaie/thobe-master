@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* تغيير لون الأخضر إلى درجة أغمق */
+  --primary: #0F6F3C; /* لون أخضر داكن */
+  --primary-dark: #0A522C; /* لون أخضر أكثر قتامة للتأثيرات */
+  --primary-light: #178A4B; /* لون أخضر أفتح للتأثيرات */
+  
+  --background: #ffffff;
+  --foreground: #171717;
+  --font-family-sans: 'Cairo', Arial, Helvetica, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-family-sans);
+  direction: rtl;
+}
+
+html, body {
+  font-family: 'Cairo', Arial, Helvetica, sans-serif;
+}
+
+@layer base {
+  html {
+    font-family: 'Cairo', Arial, Helvetica, sans-serif;
+  }
+  
+  /* تخصيص الأزرار بلون أخضر داكن */
+  .btn-primary, 
+  .bg-green-600 {
+    background-color: var(--primary) !important;
+  }
+  
+  .btn-primary:hover, 
+  .hover\:bg-green-700:hover {
+    background-color: var(--primary-dark) !important;
+  }
+}
