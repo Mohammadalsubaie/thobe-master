@@ -1,6 +1,6 @@
 'use client';
 
-import { BarChart2, Home, Menu, Package, Scissors, Settings, ShoppingBag, Users, X } from 'lucide-react';
+import { BarChart2, Home, Menu, Package, Scissors, Settings, Shirt, ShoppingBag, Users, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -8,6 +8,7 @@ import { useState } from 'react';
 export default function Sidebar() {
 	const pathname = usePathname();
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+	const [expandedItems, setExpandedItems] = useState({ settings: false });
 
 	const navigation = [
 		{ name: 'لوحة التحكم', href: '/dashboard', icon: Home },
@@ -16,11 +17,42 @@ export default function Sidebar() {
 		{ name: 'المخزون', href: '/dashboard/inventory', icon: Package },
 		{ name: 'اصلاح ثياب', href: '/dashboard/repairs', icon: Scissors },
 		{ name: 'التقارير', href: '/dashboard/reports', icon: BarChart2 },
-		{ name: 'الإعدادات', href: '/dashboard/settings', icon: Settings },
+		{
+			name: 'الإعدادات',
+			href: '/dashboard/settings',
+			icon: Settings,
+			hasSubItems: true,
+			key: 'settings',
+			subItems: [
+				{ name: 'الإعدادات العامة', href: '/dashboard/settings', icon: Settings },
+				{ name: 'إعدادات القياسات', href: '/dashboard/settings/measurements', icon: Scissors },
+				{ name: 'خيارات الثياب', href: '/dashboard/settings/options', icon: Shirt },
+			],
+		},
 	];
+
+	const toggleExpand = (key: string) => {
+		setExpandedItems((prevState) => ({
+			...prevState,
+			[key]: !prevState[key as keyof typeof prevState],
+		}));
+	};
 
 	const toggleMobileMenu = () => {
 		setIsMobileMenuOpen(!isMobileMenuOpen);
+	};
+
+	// تحديد هل العنصر الحالي نشط
+	const isItemActive = (href: string) => {
+		if (pathname === href) return true;
+		if (
+			href === '/dashboard/settings' &&
+			pathname.startsWith('/dashboard/settings') &&
+			pathname !== '/dashboard/settings/measurements' &&
+			pathname !== '/dashboard/settings/options'
+		)
+			return true;
+		return false;
 	};
 
 	return (
@@ -52,21 +84,82 @@ export default function Sidebar() {
 							<nav className='mt-8'>
 								<ul className='space-y-2'>
 									{navigation.map((item) => {
-										const isActive = pathname === item.href;
+										const isActive = item.hasSubItems
+											? pathname.startsWith(item.href)
+											: isItemActive(item.href);
+										const isSubItemActive =
+											item.hasSubItems &&
+											item.subItems?.some((subItem) => pathname === subItem.href);
+
 										return (
 											<li key={item.name}>
-												<Link
-													href={item.href}
-													onClick={toggleMobileMenu}
-													className={`flex items-center gap-3 px-4 py-3 rounded-md ${
-														isActive
-															? 'bg-green-900 text-white'
-															: 'text-white hover:bg-green-700'
-													}`}
-												>
-													<item.icon size={20} />
-													<span>{item.name}</span>
-												</Link>
+												{item.hasSubItems ? (
+													<div>
+														<button
+															onClick={() => toggleExpand(item.key)}
+															className={`flex w-full items-center justify-between gap-3 px-4 py-3 rounded-md ${
+																isActive || isSubItemActive
+																	? 'bg-green-900 text-white'
+																	: 'text-white hover:bg-green-700'
+															}`}
+														>
+															<div className='flex items-center gap-3'>
+																<item.icon size={20} />
+																<span>{item.name}</span>
+															</div>
+															<span
+																className={`transition-transform ${
+																	expandedItems[
+																		item.key as keyof typeof expandedItems
+																	]
+																		? 'rotate-180'
+																		: ''
+																}`}
+															>
+																▼
+															</span>
+														</button>
+
+														{expandedItems[item.key as keyof typeof expandedItems] && (
+															<ul className='mt-1 mr-6 space-y-1 border-r-2 border-green-700 pr-2'>
+																{item.subItems?.map((subItem) => {
+																	const isSubActive = isItemActive(subItem.href);
+																	return (
+																		<li key={subItem.name}>
+																			<Link
+																				href={subItem.href}
+																				onClick={toggleMobileMenu}
+																				className={`flex items-center gap-3 px-4 py-2 rounded-md ${
+																					isSubActive
+																						? 'bg-green-700 text-white'
+																						: 'text-green-100 hover:bg-green-700'
+																				}`}
+																			>
+																				<subItem.icon size={18} />
+																				<span className='text-sm'>
+																					{subItem.name}
+																				</span>
+																			</Link>
+																		</li>
+																	);
+																})}
+															</ul>
+														)}
+													</div>
+												) : (
+													<Link
+														href={item.href}
+														onClick={toggleMobileMenu}
+														className={`flex items-center gap-3 px-4 py-3 rounded-md ${
+															isActive
+																? 'bg-green-900 text-white'
+																: 'text-white hover:bg-green-700'
+														}`}
+													>
+														<item.icon size={20} />
+														<span>{item.name}</span>
+													</Link>
+												)}
 											</li>
 										);
 									})}
@@ -85,18 +178,73 @@ export default function Sidebar() {
 				<nav className='mt-6'>
 					<ul className='space-y-2 px-4'>
 						{navigation.map((item) => {
-							const isActive = pathname === item.href;
+							const isActive = item.hasSubItems
+								? pathname.startsWith(item.href)
+								: isItemActive(item.href);
+							const isSubItemActive =
+								item.hasSubItems && item.subItems?.some((subItem) => pathname === subItem.href);
+
 							return (
 								<li key={item.name}>
-									<Link
-										href={item.href}
-										className={`flex items-center gap-3 px-4 py-3 rounded-md ${
-											isActive ? 'bg-green-900 text-white' : 'text-white hover:bg-green-700'
-										}`}
-									>
-										<item.icon size={20} />
-										<span>{item.name}</span>
-									</Link>
+									{item.hasSubItems ? (
+										<div>
+											<button
+												onClick={() => toggleExpand(item.key)}
+												className={`flex w-full items-center justify-between gap-3 px-4 py-3 rounded-md ${
+													isActive || isSubItemActive
+														? 'bg-green-900 text-white'
+														: 'text-white hover:bg-green-700'
+												}`}
+											>
+												<div className='flex items-center gap-3'>
+													<item.icon size={20} />
+													<span>{item.name}</span>
+												</div>
+												<span
+													className={`transition-transform ${
+														expandedItems[item.key as keyof typeof expandedItems]
+															? 'rotate-180'
+															: ''
+													}`}
+												>
+													▼
+												</span>
+											</button>
+
+											{expandedItems[item.key as keyof typeof expandedItems] && (
+												<ul className='mt-1 mr-6 space-y-1 border-r-2 border-green-700 pr-2'>
+													{item.subItems?.map((subItem) => {
+														const isSubActive = isItemActive(subItem.href);
+														return (
+															<li key={subItem.name}>
+																<Link
+																	href={subItem.href}
+																	className={`flex items-center gap-3 px-4 py-2 rounded-md ${
+																		isSubActive
+																			? 'bg-green-700 text-white'
+																			: 'text-green-100 hover:bg-green-700'
+																	}`}
+																>
+																	<subItem.icon size={18} />
+																	<span className='text-sm'>{subItem.name}</span>
+																</Link>
+															</li>
+														);
+													})}
+												</ul>
+											)}
+										</div>
+									) : (
+										<Link
+											href={item.href}
+											className={`flex items-center gap-3 px-4 py-3 rounded-md ${
+												isActive ? 'bg-green-900 text-white' : 'text-white hover:bg-green-700'
+											}`}
+										>
+											<item.icon size={20} />
+											<span>{item.name}</span>
+										</Link>
+									)}
 								</li>
 							);
 						})}

@@ -1,7 +1,7 @@
 'use client';
 
 import { signOut } from 'firebase/auth';
-import { Bell, ChevronDown, LogOut, Search, User } from 'lucide-react';
+import { Bell, ChevronDown, LogOut, Search, Settings, Shirt, User } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -127,28 +127,55 @@ export default function Header() {
 					</button>
 
 					{isMenuOpen && (
-						<div className='absolute left-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-50'>
+						<div className='absolute left-0 mt-2 w-56 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-50'>
 							<Link
 								href='/dashboard/profile'
 								className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
 							>
 								الملف الشخصي
 							</Link>
-							<Link
-								href='/dashboard/settings'
-								className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-							>
-								الإعدادات
-							</Link>
-							<button
-								onClick={handleLogout}
-								className='block w-full text-right px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-							>
-								<div className='flex items-center space-x-2 space-x-reverse'>
-									<LogOut size={16} />
-									<span>تسجيل الخروج</span>
-								</div>
-							</button>
+
+							{/* قسم الإعدادات مع خط فاصل */}
+							<div className='border-t border-gray-200 mt-1 pt-1'>
+								<div className='px-4 py-1 text-xs text-gray-500'>إعدادات النظام</div>
+
+								<Link
+									href='/dashboard/settings'
+									className='flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+								>
+									<Settings size={16} className='ml-2 text-gray-500' />
+									الإعدادات العامة
+								</Link>
+
+								<Link
+									href='/dashboard/settings/measurements'
+									className='flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+								>
+									<Settings size={16} className='ml-2 text-gray-500' />
+									إعدادات القياسات
+								</Link>
+
+								<Link
+									href='/dashboard/settings/options'
+									className='flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+								>
+									<Shirt size={16} className='ml-2 text-gray-500' />
+									خيارات الثياب
+								</Link>
+							</div>
+
+							{/* قسم تسجيل الخروج */}
+							<div className='border-t border-gray-200 mt-1 pt-1'>
+								<button
+									onClick={handleLogout}
+									className='block w-full text-right px-4 py-2 text-sm text-red-600 hover:bg-gray-100'
+								>
+									<div className='flex items-center space-x-2 space-x-reverse'>
+										<LogOut size={16} />
+										<span>تسجيل الخروج</span>
+									</div>
+								</button>
+							</div>
 						</div>
 					)}
 				</div>
