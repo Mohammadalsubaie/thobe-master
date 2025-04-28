@@ -28,7 +28,7 @@ interface CustomerDetails {
 export default function CustomerDetailsPage() {
 	const params = useParams();
 
-	const customerId = params.id as string;
+	const customerId = (params?.id as string) || '';
 
 	const [customer, setCustomer] = useState<CustomerDetails | null>(null);
 	const [isLoading, setIsLoading] = useState(true);

@@ -67,6 +67,12 @@ interface TextObject {
 export default function NewMeasurementPage() {
 	const params = useParams();
 	const router = useRouter();
+
+	if (!params?.id) {
+		router.push('/dashboard/customers');
+		return null;
+	}
+
 	const customerId = params.id as string;
 
 	const [isSubmitting, setIsSubmitting] = useState(false);
