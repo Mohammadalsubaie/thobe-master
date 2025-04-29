@@ -15,11 +15,12 @@
   --font-family-sans: 'Cairo', Arial, Helvetica, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --primary: #178A4B;
+  --primary-dark: #0F6F3C;
+  --primary-light: #1FA55C;
 }
 
 body {
@@ -48,4 +49,9 @@ html, body {
   .hover\:bg-green-700:hover {
     background-color: var(--primary-dark) !important;
   }
+}
+
+/* Dark mode transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

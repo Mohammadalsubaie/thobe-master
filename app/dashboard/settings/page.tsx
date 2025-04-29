@@ -3,6 +3,7 @@
 import {
 	AlertCircle,
 	Award,
+	BarChart,
 	Bell,
 	Building,
 	Calendar,
@@ -10,15 +11,19 @@ import {
 	ChevronDown,
 	CreditCard,
 	Edit,
+	Eye,
 	FileText,
 	Filter,
 	Info,
 	Lock,
+	MapPin,
 	Pencil,
 	Percent,
+	Phone,
 	Plus,
 	Save,
 	Search,
+	Settings,
 	Shield,
 	ShoppingCart,
 	Star,
@@ -31,6 +36,7 @@ import {
 	Users,
 	X,
 } from 'lucide-react';
+import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 
 // واجهات البيانات المحسنة
@@ -1977,7 +1983,7 @@ export default function SettingsPage() {
 						<div className='space-y-6'>
 							<div>
 								<h3 className='text-lg font-medium text-gray-900'>إدارة الفروع</h3>
-								<p className='mt-1 text-sm text-gray-500'>إضافة وتعديل الفروع</p>
+								<p className='mt-1 text-sm text-gray-500'>إضافة وتعديل الفروع وإدارة بياناتها</p>
 							</div>
 
 							<div className='flex justify-end'>
@@ -1993,7 +1999,10 @@ export default function SettingsPage() {
 								</button>
 							</div>
 
-							<div id='add-branch-form' className='hidden bg-gray-50 p-4 rounded-lg mb-6'>
+							<div
+								id='add-branch-form'
+								className='hidden bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6'
+							>
 								<h4 className='text-md font-medium text-gray-900 mb-4'>إضافة فرع جديد</h4>
 								<form onSubmit={handleAddBranch} className='space-y-4'>
 									<div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -2002,7 +2011,7 @@ export default function SettingsPage() {
 												htmlFor='branch-name'
 												className='block text-sm font-medium text-gray-700'
 											>
-												اسم الفرع
+												اسم الفرع <span className='text-red-500'>*</span>
 											</label>
 											<input
 												id='branch-name'
@@ -2019,7 +2028,7 @@ export default function SettingsPage() {
 												htmlFor='branch-address'
 												className='block text-sm font-medium text-gray-700'
 											>
-												العنوان
+												العنوان <span className='text-red-500'>*</span>
 											</label>
 											<input
 												id='branch-address'
@@ -2036,7 +2045,7 @@ export default function SettingsPage() {
 												htmlFor='branch-phone'
 												className='block text-sm font-medium text-gray-700'
 											>
-												رقم الهاتف
+												رقم الهاتف <span className='text-red-500'>*</span>
 											</label>
 											<input
 												id='branch-phone'
@@ -2053,7 +2062,7 @@ export default function SettingsPage() {
 												htmlFor='branch-manager'
 												className='block text-sm font-medium text-gray-700'
 											>
-												المدير المسؤول
+												المدير المسؤول <span className='text-red-500'>*</span>
 											</label>
 											<input
 												id='branch-manager'
@@ -2087,57 +2096,223 @@ export default function SettingsPage() {
 								</form>
 							</div>
 
-							<div className='overflow-x-auto'>
-								<table className='min-w-full divide-y divide-gray-200'>
-									<thead className='bg-gray-50'>
-										<tr>
-											<th className='px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider'>
-												اسم الفرع
-											</th>
-											<th className='px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider'>
-												العنوان
-											</th>
-											<th className='px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider'>
-												رقم الهاتف
-											</th>
-											<th className='px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider'>
-												المدير المسؤول
-											</th>
-											<th className='relative px-6 py-3'>
-												<span className='sr-only'>إجراءات</span>
-											</th>
-										</tr>
-									</thead>
-									<tbody className='bg-white divide-y divide-gray-200'>
-										{branches.map((branch) => (
-											<tr key={branch.id} className='hover:bg-gray-50'>
-												<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
-													{branch.name}
-												</td>
-												<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-													{branch.address}
-												</td>
-												<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-													{branch.phone}
-												</td>
-												<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
-													{branch.manager}
-												</td>
-												<td className='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
-													<button
-														onClick={() => {
-															setBranchToDelete(branch.id);
-															setShowDeleteBranchModal(true);
-														}}
-														className='text-red-600 hover:text-red-900'
-													>
-														<Trash className='h-5 w-5' />
-													</button>
-												</td>
+							<div className='bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden'>
+								<div className='p-4 border-b border-gray-200 flex justify-between items-center'>
+									<div>
+										<h4 className='text-sm font-medium text-gray-700'>قائمة الفروع</h4>
+										<p className='text-xs text-gray-500 mt-1'>
+											يمكنك إدارة جميع الفروع والانتقال إلى صفحة تفاصيل كل فرع
+										</p>
+									</div>
+									<div className='relative'>
+										<input
+											type='text'
+											placeholder='بحث في الفروع...'
+											className='block w-64 pr-10 pl-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 text-sm'
+										/>
+										<div className='absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none'>
+											<Search className='h-4 w-4 text-gray-400' />
+										</div>
+									</div>
+								</div>
+								<div className='overflow-x-auto'>
+									<table className='min-w-full divide-y divide-gray-200'>
+										<thead className='bg-gray-50'>
+											<tr>
+												<th className='px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider'>
+													اسم الفرع
+												</th>
+												<th className='px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider'>
+													العنوان
+												</th>
+												<th className='px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider'>
+													رقم الهاتف
+												</th>
+												<th className='px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider'>
+													المدير المسؤول
+												</th>
+												<th className='px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider'>
+													الحالة
+												</th>
+												<th className='relative px-6 py-3 text-center'>
+													<span>الإجراءات</span>
+												</th>
 											</tr>
-										))}
-									</tbody>
-								</table>
+										</thead>
+										<tbody className='bg-white divide-y divide-gray-200'>
+											{branches.map((branch) => (
+												<tr key={branch.id} className='hover:bg-gray-50'>
+													<td className='px-6 py-4 whitespace-nowrap'>
+														<div className='flex items-center'>
+															<div className='h-10 w-10 shrink-0 bg-green-100 rounded-full flex items-center justify-center'>
+																<Building className='h-5 w-5 text-green-600' />
+															</div>
+															<div className='mr-3'>
+																<div className='text-sm font-medium text-gray-900'>
+																	{branch.name}
+																</div>
+																<div className='text-xs text-gray-500'>
+																	كود: BR-{branch.id.toString().padStart(3, '0')}
+																</div>
+															</div>
+														</div>
+													</td>
+													<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+														<div className='flex items-center'>
+															<MapPin className='h-4 w-4 text-gray-400 ml-1' />
+															{branch.address}
+														</div>
+													</td>
+													<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>
+														<div className='flex items-center'>
+															<Phone className='h-4 w-4 text-gray-400 ml-1' />
+															{branch.phone}
+														</div>
+													</td>
+													<td className='px-6 py-4 whitespace-nowrap'>
+														<div className='flex items-center'>
+															<div className='h-6 w-6 bg-gray-200 rounded-full flex items-center justify-center'>
+																<User className='h-3 w-3 text-gray-500' />
+															</div>
+															<span className='mr-2 text-sm text-gray-900'>
+																{branch.manager}
+															</span>
+														</div>
+													</td>
+													<td className='px-6 py-4 whitespace-nowrap'>
+														<span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800'>
+															نشط
+														</span>
+													</td>
+													<td className='px-6 py-4 whitespace-nowrap text-center text-sm font-medium'>
+														<div className='flex items-center justify-center space-x-2 space-x-reverse'>
+															<Link
+																href={`/dashboard/branches/${branch.id}`}
+																className='text-blue-600 hover:text-blue-900'
+																title='عرض التفاصيل'
+															>
+																<Eye className='h-5 w-5' />
+															</Link>
+															<button
+																className='text-green-600 hover:text-green-900'
+																title='تعديل'
+															>
+																<Edit className='h-5 w-5' />
+															</button>
+															<button
+																onClick={() => {
+																	setBranchToDelete(branch.id);
+																	setShowDeleteBranchModal(true);
+																}}
+																className='text-red-600 hover:text-red-900'
+																title='حذف'
+															>
+																<Trash className='h-5 w-5' />
+															</button>
+														</div>
+													</td>
+												</tr>
+											))}
+										</tbody>
+									</table>
+								</div>
+								{branches.length === 0 && (
+									<div className='p-8 text-center'>
+										<Building className='h-10 w-10 text-gray-300 mx-auto mb-2' />
+										<h3 className='text-sm font-medium text-gray-900'>لا توجد فروع</h3>
+										<p className='mt-1 text-sm text-gray-500'>
+											لم يتم إضافة أي فروع بعد، يمكنك إضافة فرع جديد من خلال زر "إضافة فرع جديد"
+										</p>
+									</div>
+								)}
+								{branches.length > 0 && (
+									<div className='px-4 py-3 bg-gray-50 border-t border-gray-200 text-left text-xs text-gray-500'>
+										إجمالي الفروع: {branches.length}
+									</div>
+								)}
+							</div>
+
+							{/* إضافة قسم للفروع المميزة أو آخر الفروع المضافة */}
+							<div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+								<div className='bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden md:col-span-2'>
+									<div className='px-4 py-3 border-b border-gray-200'>
+										<h3 className='text-sm font-medium text-gray-700'>إحصائيات الفروع</h3>
+									</div>
+									<div className='p-4'>
+										<div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
+											<div className='bg-blue-50 rounded-lg p-3 text-center'>
+												<h4 className='text-xs text-blue-600 font-medium mb-1'>
+													إجمالي الفروع
+												</h4>
+												<p className='text-2xl font-bold text-blue-800'>{branches.length}</p>
+											</div>
+											<div className='bg-green-50 rounded-lg p-3 text-center'>
+												<h4 className='text-xs text-green-600 font-medium mb-1'>
+													الفروع النشطة
+												</h4>
+												<p className='text-2xl font-bold text-green-800'>{branches.length}</p>
+											</div>
+											<div className='bg-amber-50 rounded-lg p-3 text-center'>
+												<h4 className='text-xs text-amber-600 font-medium mb-1'>
+													عدد الموظفين
+												</h4>
+												<p className='text-2xl font-bold text-amber-800'>42</p>
+											</div>
+											<div className='bg-purple-50 rounded-lg p-3 text-center'>
+												<h4 className='text-xs text-purple-600 font-medium mb-1'>
+													إجمالي المبيعات
+												</h4>
+												<p className='text-2xl font-bold text-purple-800'>5.2M</p>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div className='bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden'>
+									<div className='px-4 py-3 border-b border-gray-200'>
+										<h3 className='text-sm font-medium text-gray-700'>روابط سريعة</h3>
+									</div>
+									<div className='p-4'>
+										<ul className='divide-y divide-gray-200'>
+											<li className='py-2'>
+												<Link
+													href='/dashboard/branches/reports'
+													className='text-sm text-blue-600 hover:text-blue-800 flex items-center'
+												>
+													<FileText className='h-4 w-4 ml-1.5' />
+													تقارير أداء الفروع
+												</Link>
+											</li>
+											<li className='py-2'>
+												<Link
+													href='/dashboard/settings/branches'
+													className='text-sm text-blue-600 hover:text-blue-800 flex items-center'
+												>
+													<Settings className='h-4 w-4 ml-1.5' />
+													إعدادات الفروع
+												</Link>
+											</li>
+											<li className='py-2'>
+												<Link
+													href='/dashboard/branches/map'
+													className='text-sm text-blue-600 hover:text-blue-800 flex items-center'
+												>
+													<MapPin className='h-4 w-4 ml-1.5' />
+													خريطة توزيع الفروع
+												</Link>
+											</li>
+											<li className='py-2'>
+												<Link
+													href='/dashboard/branches/compare'
+													className='text-sm text-blue-600 hover:text-blue-800 flex items-center'
+												>
+													<BarChart className='h-4 w-4 ml-1.5' />
+													مقارنة أداء الفروع
+												</Link>
+											</li>
+										</ul>
+									</div>
+								</div>
 							</div>
 						</div>
 					)}

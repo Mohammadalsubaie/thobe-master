@@ -1,3 +1,4 @@
+import { Providers } from '@/components/providers/Providers';
 import type { Metadata } from 'next';
 import './globals.css';
 
@@ -12,7 +13,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang='ar' dir='rtl'>
+		<html lang='ar' dir='rtl' suppressHydrationWarning>
 			<head>
 				<link rel='preconnect' href='https://fonts.googleapis.com' />
 				<link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='anonymous' />
@@ -21,7 +22,9 @@ export default function RootLayout({
 					rel='stylesheet'
 				/>
 			</head>
-			<body className='font-cairo antialiased'>{children}</body>
+			<body className='font-cairo antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100'>
+				<Providers>{children}</Providers>
+			</body>
 		</html>
 	);
 }

@@ -16,6 +16,7 @@ export default function Sidebar() {
 		{ name: 'الطلبات', href: '/dashboard/orders', icon: ShoppingBag },
 		{ name: 'المخزون', href: '/dashboard/inventory', icon: Package },
 		{ name: 'اصلاح ثياب', href: '/dashboard/repairs', icon: Scissors },
+		{ name: 'الفروع', href: '/dashboard/branches', icon: Home },
 		{ name: 'التقارير', href: '/dashboard/reports', icon: BarChart2 },
 		{
 			name: 'الإعدادات',

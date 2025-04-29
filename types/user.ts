@@ -6,6 +6,9 @@ export interface User {
 	branchId?: string;
 	phone?: string;
 	active: boolean;
+	createdCustomers?: string[];
+	createdOrders?: string[];
+	assignedOrders?: string[];
 	createdAt: Date;
 	updatedAt: Date;
 }

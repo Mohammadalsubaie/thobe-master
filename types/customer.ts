@@ -7,6 +7,8 @@ export interface Customer {
 	phone: string;
 	email?: string;
 	address?: string;
+	branchId: string;
+	createdBy: string;
 	location?: {
 		lat: number;
 		lng: number;
