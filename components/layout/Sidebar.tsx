@@ -17,7 +17,6 @@ import {
 	Search,
 	Settings,
 	ShoppingBag,
-	Smartphone,
 	Star,
 	Truck,
 	Users,
@@ -266,17 +265,17 @@ export default function Sidebar() {
 				{ name: 'تعليقات العملاء', href: '/dashboard/ecommerce/reviews' },
 			],
 		},
-		{
-			name: 'تطبيق الجوال',
-			href: '/dashboard/mobile-app',
-			icon: Smartphone,
-			isExpandable: true,
-			subItems: [
-				{ name: 'إعدادات التطبيق', href: '/dashboard/mobile-app/settings' },
-				{ name: 'الإشعارات', href: '/dashboard/mobile-app/notifications' },
-				{ name: 'إحصائيات التطبيق', href: '/dashboard/mobile-app/analytics' },
-			],
-		},
+		// {
+		// 	name: 'تطبيق الجوال',
+		// 	href: '/dashboard/mobile-app',
+		// 	icon: Smartphone,
+		// 	isExpandable: true,
+		// 	subItems: [
+		// 		{ name: 'إعدادات التطبيق', href: '/dashboard/mobile-app/settings' },
+		// 		{ name: 'الإشعارات', href: '/dashboard/mobile-app/notifications' },
+		// 		{ name: 'إحصائيات التطبيق', href: '/dashboard/mobile-app/analytics' },
+		// 	],
+		// },
 		{
 			name: 'الإعدادات',
 			href: '/dashboard/settings',
